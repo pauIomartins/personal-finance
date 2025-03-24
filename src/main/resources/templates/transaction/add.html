@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Add Transaction - Personal Finance Manager</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Add New Transaction</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Error Messages -->
+                            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <span th:text="${error}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <form th:action="@{/dashboard/add}" method="post" th:object="${transaction}">
+                                <div class="mb-3">
+                                    <label for="type" class="form-label">Transaction Type</label>
+                                    <select class="form-select" id="type" th:field="*{type}" required>
+                                        <option value="">Select Type</option>
+                                        <option th:each="type : ${transactionTypes}"
+                                                th:value="${type}"
+                                                th:text="${type.name()}">INCOME</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="amount" th:field="*{amount}"
+                                               step="0.01" min="0.01" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <input type="text" class="form-control" id="description" th:field="*{description}"
+                                           required maxlength="255">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="category" class="form-label">Category</label>
+                                    <input type="text" class="form-control" id="category" th:field="*{category}"
+                                           required maxlength="50">
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">Add Transaction</button>
+                                    <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

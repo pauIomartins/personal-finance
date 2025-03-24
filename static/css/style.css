@@ -1,0 +1,50 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.badge {
+    padding: 0.5em 0.8em;
+}
+
+.alert {
+    margin-bottom: 1.5rem;
+}
+
+/* Dashboard cards animation */
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Custom colors for amount display */
+.text-income {
+    color: #28a745;
+}
+
+.text-expense {
+    color: #dc3545;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+    .table-responsive {
+        margin-bottom: 0;
+    }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Welcome - Personal Finance Manager</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="text-center">
+            <h1 class="display-4 mb-4">Welcome to Personal Finance Manager</h1>
+            <p class="lead mb-5">Take control of your finances with our easy-to-use finance management system.</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Track Expenses</h5>
+                            <p class="card-text">Keep track of your daily expenses and income in one place.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">View Analytics</h5>
+                            <p class="card-text">Get insights into your spending patterns with detailed analytics.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Manage Budget</h5>
+                            <p class="card-text">Set budgets and track your progress towards financial goals.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a th:href="@{/register}" class="btn btn-primary btn-lg me-3">Get Started</a>
+                <a th:href="@{/login}" class="btn btn-outline-primary btn-lg">Login</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
