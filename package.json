@@ -1,0 +1,16 @@
+{
+  "name": "personal-finance-manager",
+  "version": "1.0.0",
+  "description": "Personal Finance Manager Application",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}

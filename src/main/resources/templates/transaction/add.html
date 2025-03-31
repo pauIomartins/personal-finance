@@ -15,12 +15,7 @@
                             <h5 class="mb-0">Add New Transaction</h5>
                         </div>
                         <div class="card-body">
-                            <!-- Error Messages -->
-                            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <span th:text="${error}"></span>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-
+                            <!-- Error and message alerts are now handled by the layout template -->
                             <form th:action="@{/dashboard/add}" method="post" th:object="${transaction}">
                                 <div class="mb-3">
                                     <label for="type" class="form-label">Transaction Type</label>

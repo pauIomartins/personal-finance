@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Server Error - Personal Finance Manager</title>
+    <link rel="stylesheet" th:href="@{/css/error-pages.css}">
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div th:replace="~{fragments/error-fragment :: error-content(
+                        code='500', 
+                        title='Internal Server Error', 
+                        message='Something went wrong on our end. Our team has been notified and is working to fix the issue. Please try again later or contact support if the problem persists.', 
+                        imageUrl='https://cdn-icons-png.flaticon.com/512/6134/6134065.png')}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

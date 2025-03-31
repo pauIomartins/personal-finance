@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Access Denied - Personal Finance Manager</title>
+    <link rel="stylesheet" th:href="@{/css/error-pages.css}">
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div th:replace="~{fragments/error-fragment :: error-content(
+                        code='403', 
+                        title='Access Denied', 
+                        message='You don\'t have permission to access this page. This area might be restricted to certain users or require you to log in first.', 
+                        imageUrl='https://cdn-icons-png.flaticon.com/512/1644/1644056.png')}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

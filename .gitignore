@@ -49,6 +49,16 @@ target/
 !**/src/test/**/target/
 
 ### H2 Database ###
-*.h2.db
-*.db.trace.db
-*.lock.db
+*.mv.db
+*.trace.db
+
+### Local workspace files ###
+*.code-workspace
+list_users.sh
+
+### Node.js ###
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json

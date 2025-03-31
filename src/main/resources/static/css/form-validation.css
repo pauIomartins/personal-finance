@@ -1,0 +1,86 @@
+/**
+ * Custom CSS for form validation highlighting
+ */
+
+/* Enhanced styling for invalid form fields */
+.form-control.is-invalid {
+  border-width: 2px;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Enhanced styling for valid form fields */
+.form-control.is-valid {
+  border-width: 2px;
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Improved feedback messages */
+.invalid-feedback {
+  font-size: 0.875rem;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: rgba(220, 53, 69, 0.1);
+  border-left: 3px solid #dc3545;
+}
+
+/* Shake animation for invalid fields on submit */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+  animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Focus styles for form fields */
+.form-control:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Tooltip styles for password requirements */
+.password-tooltip {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.5rem;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.password-tooltip .tooltip-text {
+  visibility: hidden;
+  width: 250px;
+  background-color: #555;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -125px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.password-tooltip .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.password-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}

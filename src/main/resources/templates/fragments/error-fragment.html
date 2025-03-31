@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Error page fragment -->
+    <div th:fragment="error-content(code, title, message, imageUrl)">
+        <div class="error-container">
+            <div class="error-header">
+                <h1 th:class="${'error-code error-code-' + code}" th:text="${code}">Error</h1>
+                <h2 class="error-message" th:text="${title}">Error Title</h2>
+            </div>
+            
+            <!-- Image is optional -->
+            <div class="error-image" th:if="${imageUrl != null}">
+                <img th:src="${imageUrl}" alt="Error illustration" class="img-fluid">
+            </div>
+            
+            <p class="error-description" th:text="${message}">Error message goes here.</p>
+            
+            <div class="error-actions">
+                <a th:href="@{/}" class="btn btn-primary">
+                    <i class="bi bi-house-door"></i> Back to Home
+                </a>
+                
+                <!-- Dashboard button (only for authenticated users) -->
+                <a th:href="@{/dashboard}" class="btn btn-outline-primary" sec:authorize="isAuthenticated()" th:if="${code != '403'}">
+                    <i class="bi bi-speedometer2"></i> Go to Dashboard
+                </a>
+                
+                <!-- Login button (only for unauthenticated users and 403 errors) -->
+                <a th:href="@{/login}" class="btn btn-outline-primary" sec:authorize="!isAuthenticated()" th:if="${code == '403'}">
+                    <i class="bi bi-box-arrow-in-right"></i> Log In
+                </a>
+                
+                <!-- Try again button (only for 500 errors) -->
+                <a href="javascript:location.reload()" class="btn btn-outline-primary" th:if="${code == '500'}">
+                    <i class="bi bi-arrow-clockwise"></i> Try Again
+                </a>
+            </div>
+            
+            <!-- Error details (only shown in development) -->
+            <div class="error-details" th:if="${trace != null}">
+                <h4>Technical Details</h4>
+                <p><strong>Date:</strong> <span th:text="${#dates.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">2025-03-31</span></p>
+                <p><strong>Path:</strong> <span th:text="${path}"></span></p>
+                <div>
+                    <strong>Stack Trace:</strong>
+                    <pre th:text="${trace}"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

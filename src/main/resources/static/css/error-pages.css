@@ -1,0 +1,64 @@
+/**
+ * Styles for error pages
+ */
+
+.error-container {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.error-header {
+    margin-bottom: 20px;
+}
+
+.error-code {
+    font-size: 120px;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+/* Different colors for different error types */
+.error-code-404 {
+    color: #ffc107; /* yellow */
+}
+
+.error-code-403 {
+    color: #fd7e14; /* orange */
+}
+
+.error-code-500 {
+    color: #dc3545; /* red */
+}
+
+.error-code-default {
+    color: #6c757d; /* gray */
+}
+
+.error-message {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.error-image {
+    max-width: 200px;
+    margin: 0 auto 20px;
+}
+
+.error-description {
+    font-size: 16px;
+    margin-bottom: 25px;
+    color: #6c757d;
+}
+
+.error-details {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.error-actions {
+    margin-top: 30px;
+}
