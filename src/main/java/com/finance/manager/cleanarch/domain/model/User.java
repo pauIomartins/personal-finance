@@ -16,9 +16,9 @@ public final class User {
   private static final String PASSWORD_PATTERN = 
       "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
   private static final String EMAIL_PATTERN =
-      "^[A-Za-z0-9+_.-]+@"                                // Local part
+      "^[A-Za-z0-9][A-Za-z0-9+_.-]*[A-Za-z0-9]@"         // Local part with valid start/end
       + "[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?"      // Domain first part
-      + "(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$"; // Domain other parts
+      + "(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$";  // Domain parts
 
   @Setter
   private Long id;
