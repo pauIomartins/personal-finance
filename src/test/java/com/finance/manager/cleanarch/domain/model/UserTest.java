@@ -40,7 +40,10 @@ class UserTest {
     "test.example.com",
     "test@example",
     "test@@example.com",
-    "test@example..com"
+    "test@example..com",
+    ".@gmail.com",           // email starting with dot
+    ".test@example.com",     // local part starting with dot
+    "test.@example.com"      // local part ending with dot
   })
   @DisplayName("Should reject invalid emails")
   void isValidEmail_WithInvalidEmails_ReturnsFalse(String invalidEmail) {
