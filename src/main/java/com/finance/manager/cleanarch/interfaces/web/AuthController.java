@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller responsible for handling authentication-related requests.
@@ -29,6 +28,7 @@ public final class AuthController {
    *
    * @param error optional error parameter indicating login failure
    * @param logout optional logout parameter indicating successful logout
+   * @param registered optional registered parameter indicating successful registration
    * @param model the Spring MVC model
    * @return the name of the login view template
    */
@@ -36,6 +36,7 @@ public final class AuthController {
   public String login(
       @RequestParam(required = false) String error,
       @RequestParam(required = false) String logout,
+      @RequestParam(required = false) String registered,
       Model model) {
     
     if (Boolean.parseBoolean(error)) {
@@ -44,6 +45,10 @@ public final class AuthController {
 
     if (Boolean.parseBoolean(logout)) {
       model.addAttribute("message", "You have been successfully logged out.");
+    }
+    
+    if (Boolean.parseBoolean(registered)) {
+      model.addAttribute("message", "Registration successful! Please login.");
     }
 
     return "login";
@@ -58,6 +63,8 @@ public final class AuthController {
   @GetMapping("/register")
   public String registerForm(Model model) {
     model.addAttribute("passwordRequirements", User.getPasswordRequirements());
+    model.addAttribute("emailPattern", User.getEmailPattern());
+    model.addAttribute("passwordPattern", User.getPasswordPattern());
     model.addAttribute("user", new UserDto());
     return "register";
   }
@@ -66,21 +73,35 @@ public final class AuthController {
    * Handles user registration.
    *
    * @param userDto the user data transfer object containing registration information
-   * @param redirectAttributes for adding flash messages
-   * @return redirect to login page on success or back to registration on failure
+   * @param model for adding attributes
+   * @return the name of the registration view template or redirect to login page on success
    */
   @PostMapping("/register")
   public String register(
       @ModelAttribute UserDto userDto,
-      RedirectAttributes redirectAttributes) {
+      Model model) {
     try {
+      // Validate password confirmation
+      if (!userDto.getPassword().equals(userDto.getPasswordConfirmation())) {
+        model.addAttribute("error", "Passwords do not match");
+        model.addAttribute("user", userDto);
+        model.addAttribute("passwordRequirements", 
+            User.getPasswordRequirements());
+        model.addAttribute("emailPattern", User.getEmailPattern());
+        model.addAttribute("passwordPattern", User.getPasswordPattern());
+        return "register";
+      }
+      
       userUseCase.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getName());
-      redirectAttributes.addFlashAttribute("message", "Registration successful! Please login.");
-      return "redirect:/login";
+      return "redirect:/login?registered=true";
     } catch (IllegalArgumentException e) {
-      redirectAttributes.addFlashAttribute("error", e.getMessage());
-      redirectAttributes.addFlashAttribute("passwordRequirements", User.getPasswordRequirements());
-      return "redirect:/register";
+      model.addAttribute("error", e.getMessage());
+      model.addAttribute("user", userDto);
+      model.addAttribute("passwordRequirements", 
+          User.getPasswordRequirements());
+      model.addAttribute("emailPattern", User.getEmailPattern());
+      model.addAttribute("passwordPattern", User.getPasswordPattern());
+      return "register";
     }
   }
 }

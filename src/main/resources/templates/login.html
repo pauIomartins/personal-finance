@@ -16,10 +16,7 @@
                             <span th:text="${error}"></span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
-                        <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
-                            <span th:text="${message}"></span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
+                        <!-- Message alerts are now handled by the layout template -->
                         <form th:action="@{/login}" method="post">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Email</label>

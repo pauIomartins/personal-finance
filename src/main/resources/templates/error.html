@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Error - Personal Finance Manager</title>
+    <link rel="stylesheet" th:href="@{/css/error-pages.css}">
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div th:replace="~{fragments/error-fragment :: error-content(
+                        code=${status ?: 'default'}, 
+                        title=${error ?: 'Something went wrong'}, 
+                        message=${message ?: 'We\'re sorry, but something went wrong. Our team has been notified and is working to fix the issue.'}, 
+                        imageUrl=null)}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -19,6 +19,7 @@ public final class UserDto {
   private Long id;
   private String email;
   private String password;
+  private String passwordConfirmation;
   private String name;
 
   /**

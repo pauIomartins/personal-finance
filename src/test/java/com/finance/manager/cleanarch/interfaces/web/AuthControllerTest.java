@@ -6,7 +6,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -124,35 +123,125 @@ class AuthControllerTest {
   }
 
   @Test
-  @DisplayName("Should register user and redirect to login")
+  @DisplayName("Should display register form")
+  @WithAnonymousUser
+  void registerForm_ShouldDisplayRegisterForm() throws Exception {
+    mockMvc.perform(get("/register"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("register"))
+        .andExpect(model().attributeExists("user"))
+        .andExpect(model().attributeExists("passwordRequirements"))
+        .andExpect(model().attributeExists("emailPattern"));
+  }
+
+  @Test
+  @DisplayName("Should pass password pattern to register form")
+  @WithAnonymousUser
+  void registerForm_ShouldPassPasswordPatternToModel() throws Exception {
+    mockMvc.perform(get("/register"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("register"))
+        .andExpect(model().attributeExists("passwordPattern"))
+        .andExpect(model().attribute("passwordPattern", User.getPasswordPattern()));
+  }
+
+  @Test
+  @DisplayName("Should validate password confirmation match")
+  @WithAnonymousUser
+  void register_WithPasswordMismatch_ShouldReturnToRegisterForm() throws Exception {
+    mockMvc.perform(post("/register")
+            .with(csrf())
+            .param("email", "test@example.com")
+            .param("password", "Password1!")
+            .param("passwordConfirmation", "DifferentPassword1!")
+            .param("name", "Test User"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("register"))
+        .andExpect(model().attributeExists("error"))
+        .andExpect(model().attribute("error", "Passwords do not match"));
+  }
+
+  @Test
+  @DisplayName("Should pass password pattern to model on password mismatch")
+  @WithAnonymousUser
+  void register_WithPasswordMismatch_ShouldPassPasswordPatternToModel() throws Exception {
+    mockMvc.perform(post("/register")
+            .with(csrf())
+            .param("email", "test@example.com")
+            .param("password", "Password1!")
+            .param("passwordConfirmation", "DifferentPassword1!")
+            .param("name", "Test User"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("register"))
+        .andExpect(model().attributeExists("passwordPattern"))
+        .andExpect(model().attribute("passwordPattern", User.getPasswordPattern()));
+  }
+
+  @Test
+  @DisplayName("Should register user with matching passwords")
+  @WithAnonymousUser
+  void register_WithMatchingPasswords_ShouldRedirectToLogin() throws Exception {
+    mockMvc.perform(post("/register")
+            .with(csrf())
+            .param("email", "test@example.com")
+            .param("password", "Password1!")
+            .param("passwordConfirmation", "Password1!")
+            .param("name", "Test User"))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("/login?registered=true"));
+  }
+
+  @Test
+  @DisplayName("Should register user and render login page")
   void register_WithValidData_ShouldRegisterAndRedirect() throws Exception {
+    // Não criamos um objeto User real, apenas mockamos o comportamento do userUseCase
     when(userUseCase.registerUser(anyString(), anyString(), anyString()))
-        .thenReturn(new User("test@example.com", "Test@2024", "Test User"));
+        .thenReturn(new User("test@example.com", "Password1!", "Test User"));
 
     mockMvc.perform(post("/register")
             .with(csrf())
             .param("email", "test@example.com")
-            .param("password", "Test@2024")
+            .param("password", "Password1!")
+            .param("passwordConfirmation", "Password1!")
             .param("name", "Test User"))
         .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl("/login"));
+        .andExpect(redirectedUrl("/login?registered=true"));
   }
 
   @Test
-  @DisplayName("Should redirect to register with error")
+  @DisplayName("Should show error on invalid registration data")
   void register_WithInvalidData_ShouldRedirectWithError() throws Exception {
-    String errorMessage = "Invalid data";
     when(userUseCase.registerUser(anyString(), anyString(), anyString()))
-        .thenThrow(new IllegalArgumentException(errorMessage));
+        .thenThrow(new IllegalArgumentException("Invalid data"));
 
     mockMvc.perform(post("/register")
             .with(csrf())
-            .param("email", "invalid")
-            .param("password", "weak")
-            .param("name", ""))
-        .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl("/register"))
-        .andExpect(flash().attribute("error", errorMessage));
+            .param("email", "test@example.com")
+            .param("password", "Password1!")
+            .param("passwordConfirmation", "Password1!")
+            .param("name", "Test User"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("register"))
+        .andExpect(model().attributeExists("error"));
+  }
+
+  @Test
+  @DisplayName("Should pass password pattern to model on validation error")
+  @WithAnonymousUser
+  void register_WithValidationError_ShouldPassPasswordPatternToModel() throws Exception {
+    when(userUseCase.registerUser(anyString(), anyString(), anyString()))
+        .thenThrow(new IllegalArgumentException("Email already registered"));
+    
+    mockMvc.perform(post("/register")
+            .with(csrf())
+            .param("email", "existing@example.com")
+            .param("password", "Password1!")
+            .param("passwordConfirmation", "Password1!")
+            .param("name", "Test User"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("register"))
+        .andExpect(model().attributeExists("passwordPattern"))
+        .andExpect(model().attribute("passwordPattern", User.getPasswordPattern()));
   }
 
   @Test

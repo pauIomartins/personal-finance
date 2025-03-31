@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <title>Register - Personal Finance Manager</title>
+    <link rel="stylesheet" th:href="@{/css/form-validation.css}">
 </head>
 <body>
     <div layout:fragment="content">
@@ -12,28 +13,40 @@
                         <h2 class="text-center">Register</h2>
                     </div>
                     <div class="card-body">
-                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <span th:text="${error}"></span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                        <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
-                            <span th:text="${message}"></span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                        <form th:action="@{/register}" method="post">
+                        <!-- Error and message alerts are now handled by the layout template -->
+                        <form th:action="@{/register}" method="post" novalidate>
+                            <input type="hidden" id="emailPatternHidden" th:value="${emailPattern}">
+                            <input type="hidden" id="passwordPatternHidden" th:value="${passwordPattern}">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <input type="text" class="form-control" id="name" name="name" th:value="${user != null ? user.name : ''}" required>
+                                <div class="invalid-feedback">
+                                    Please provide your name.
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="email" name="email" th:value="${user != null ? user.email : ''}" required>
                                 <div class="form-text">We'll never share your email with anyone else.</div>
+                                <!-- Feedback will be dynamically added here by JavaScript -->
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                                <div class="form-text" th:if="${passwordRequirements}" th:text="${passwordRequirements}"></div>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <span class="password-tooltip">
+                                        <i class="bi bi-info-circle"></i>
+                                        <span class="tooltip-text" th:text="${passwordRequirements}"></span>
+                                    </span>
+                                </div>
+                                <div class="form-text" th:if="${passwordRequirements}">Password must meet the requirements.</div>
+                                <!-- Feedback will be dynamically added here by JavaScript -->
+                                <div id="password-feedback" class="invalid-feedback"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="passwordConfirmation" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="passwordConfirmation" name="passwordConfirmation" required>
+                                <!-- Feedback will be dynamically added here by JavaScript -->
                             </div>
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">Register</button>
@@ -47,5 +60,69 @@
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the email pattern from the server
+            const emailPattern = document.getElementById('emailPatternHidden').value;
+            
+            // Create a regex object from the pattern
+            const emailRegex = new RegExp(emailPattern);
+            
+            // Get the email input field
+            const emailInput = document.getElementById('email');
+            
+            // Add validation on blur and input events
+            emailInput.addEventListener('blur', validateEmail);
+            emailInput.addEventListener('input', function() {
+                // Remove validation styling when user starts typing again
+                this.classList.remove('is-invalid');
+                this.classList.remove('is-valid');
+            });
+            
+            // Email validation function
+            function validateEmail() {
+                const email = emailInput.value.trim();
+                const emailFeedback = document.getElementById('email-feedback');
+                
+                if (email === '') {
+                    return; // Don't validate empty fields
+                }
+                
+                if (emailRegex.test(email)) {
+                    // Valid email
+                    emailInput.classList.remove('is-invalid');
+                    emailInput.classList.add('is-valid');
+                    if (emailFeedback) {
+                        emailFeedback.style.display = 'none';
+                    }
+                } else {
+                    // Invalid email
+                    emailInput.classList.remove('is-valid');
+                    emailInput.classList.add('is-invalid');
+                    if (!emailFeedback) {
+                        // Create feedback element if it doesn't exist
+                        const feedbackDiv = document.createElement('div');
+                        feedbackDiv.id = 'email-feedback';
+                        feedbackDiv.className = 'invalid-feedback';
+                        feedbackDiv.textContent = 'Please enter a valid email address.';
+                        emailInput.parentNode.appendChild(feedbackDiv);
+                    } else {
+                        emailFeedback.style.display = 'block';
+                    }
+                }
+            }
+            
+            // Form validation before submit
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                validateEmail();
+                
+                // Check if there are any validation errors
+                if (emailInput.classList.contains('is-invalid')) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

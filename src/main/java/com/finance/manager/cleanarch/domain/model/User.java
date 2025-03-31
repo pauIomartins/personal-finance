@@ -79,7 +79,7 @@ public final class User {
   }
 
   /**
-   * Gets a description of password requirements.
+   * Returns a human-readable description of password requirements.
    *
    * @return string describing password requirements
    */
@@ -92,6 +92,24 @@ public final class User {
         + "\n- At least one special character (@#$%%^&+=!)"
         + "\n- No whitespace allowed",
         MIN_PASSWORD_LENGTH);
+  }
+
+  /**
+   * Returns the email pattern used for validation.
+   *
+   * @return the email pattern regex
+   */
+  public static String getEmailPattern() {
+    return EMAIL_PATTERN;
+  }
+
+  /**
+   * Returns the password pattern used for validation.
+   *
+   * @return the password pattern regex
+   */
+  public static String getPasswordPattern() {
+    return PASSWORD_PATTERN;
   }
 
   private void validateEmail(String email) {
